@@ -1,4 +1,5 @@
-import express from 'express';
+import express from "express";
+import { syncUser } from "../controllers/authController";
 
 const UserRouter = express.Router();
 
@@ -15,6 +16,7 @@ UserRouter.post("/register", async (req, res) => {
     res.status(500).json({ error: "Registration failed" });
   }
 });
+UserRouter.post("/sync", syncUser);
 
 UserRouter.post("/login", async (req, res) => {
   try {
