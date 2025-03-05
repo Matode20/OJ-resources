@@ -26,7 +26,7 @@ export const initializePayment = async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${PAYSTACK_SECRET}`,
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
       }

@@ -23,7 +23,7 @@ export default function Home() {
           High-quality organic produce delivered fast & fresh. Shop now and
           enjoy healthy living!
         </p>
-        <Link href="/shop">
+        <Link href="/Shop">
           <Button className="mt-6 bg-white text-green-600 hover:bg-green-500 hover:text-white px-6 py-3 text-lg font-semibold rounded-xl">
             Shop Now
           </Button>

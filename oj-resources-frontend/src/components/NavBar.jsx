@@ -1,18 +1,23 @@
-// components/Navbar.jsx
+"use client";
+// components/NavBar.jsx
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { TiShoppingCart } from "react-icons/ti";
 
-const Navbar = () => {
+const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-green-600">
-          AgriShop
+        <Link
+          href="/"
+          className="text-2xl font-bold text-green-600 tracking-tighter"
+        >
+          OJ<span className="italic text-black">Resources</span>
         </Link>
 
         {/* Desktop Menu */}
@@ -23,17 +28,25 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/shop" className="hover:text-green-600">
+            <Link href="/Shop" className="hover:text-green-600">
               Shop
             </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-green-600">
+            <Link
+              href="/Cart"
+              className="mb-[0.9] px-3 py-1 flex justify-center items-center rounded-md"
+            >
+              <TiShoppingCart size={24} />
+            </Link>
+          </li>
+          <li>
+            <Link href="/About" className="hover:text-green-600">
               About
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="hover:text-green-600">
+            <Link href="/Contact" className="hover:text-green-600">
               Contact
             </Link>
           </li>
@@ -60,7 +73,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/shop"
+                href="/Shop"
                 className="block"
                 onClick={() => setIsOpen(false)}
               >
@@ -69,7 +82,16 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/about"
+                href="/Cart"
+                className="mb-[0.9] px-3 py-1 justify-center items-center block"
+                onClick={() => setIsOpen(false)}
+              >
+                <TiShoppingCart size={24} />
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/About"
                 className="block"
                 onClick={() => setIsOpen(false)}
               >
@@ -78,7 +100,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/contact"
+                href="/Contact"
                 className="block"
                 onClick={() => setIsOpen(false)}
               >
@@ -92,4 +114,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;

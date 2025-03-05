@@ -4,21 +4,21 @@ import Image from "next/image";
 // Import your images
 import Live from "../assets/live.jpg";
 import Processed from "../assets/processed.jpg";
-import Dry from "../assets/dry.avif";
+;
 
 const categories = [
   {
     name: "Live",
-    image: Live,
+    image: Live
   },
   {
     name: "Processed",
     image: Processed,
   },
-  {
-    name: "Dry",
-    image: Dry,
-  },
+//   {
+//     name: "Dry",
+//     image: Dry,
+//   },
 ];
 
 export default function Categories() {
