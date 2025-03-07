@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
 import useCartStore from "../Store/cartStore";
-;
+import ProductCard from "@/components/ProductCard";
+import { toast } from "react-hot-toast";
+import { fetchProducts } from "@/utils/api.js";
 
 const ShopPage = () => {
   const [products, setProducts] = useState([]);
@@ -14,16 +15,18 @@ const ShopPage = () => {
   const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const getProducts = async () => {
       try {
-        const { data } = await axios.get("/api/products");
+        const data = await fetchProducts();
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {
         console.error("Error fetching products", error);
+        toast.error("Failed to load products");
       }
     };
-    fetchProducts();
+
+    getProducts();
   }, []);
 
   useEffect(() => {
@@ -45,7 +48,7 @@ const ShopPage = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="container mx-auto p-6">
       <NavBar />
       <h1 className="text-3xl font-bold mb-6">Shop</h1>
       <div className="flex gap-4 mb-4">
@@ -62,35 +65,25 @@ const ShopPage = () => {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="All">All Categories</option>
-          <option value="Fruits">Live</option>
-          <option value="Vegetables">Processed</option>
-          <option value="Grains">Dry</option>
+          <option value="Live">Live</option>
+          <option value="Processed">Processed</option>
+          <option value="Dry">Dry</option>
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
-          <motion.div
-            key={product._id}
-            className="border p-4 rounded shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-40 object-cover mb-4 rounded"
+      {filteredProducts.length === 0 ? (
+        <p className="text-center text-gray-500">No products available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product._id}
+              product={product}
+              onAddToCart={handleAddToCart}
             />
-            <h2 className="text-lg font-semibold">{product.name}</h2>
-            <p className="text-gray-600">${product.price}</p>
-            <button
-              onClick={() => handleAddToCart(product)}
-              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Add to Cart
-            </button>
-          </motion.div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

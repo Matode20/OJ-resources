@@ -1,5 +1,5 @@
 import express from "express";
-import { syncUser } from "../controllers/authController";
+import authController from "../controllers/authController.js";
 
 const UserRouter = express.Router();
 
@@ -8,24 +8,8 @@ UserRouter.get("/", (req, res) => {
   res.json({ message: "User routes working" });
 });
 
-UserRouter.post("/register", async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Registration failed" });
-  }
-});
-UserRouter.post("/sync", syncUser);
-
-UserRouter.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    res.json({ message: "Login successful" });
-  } catch (error) {
-    res.status(401).json({ error: "Invalid credentials" });
-  }
-});
+UserRouter.post("/register", authController.register);
+UserRouter.post("/login", authController.login);;
 
 UserRouter.get("/profile/:id", (req, res) => {});
 

@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/admin", adminRouter);
-app.use("/api/products", productRouter);
+app.use("/api/v1/products", productRouter);
 app.use("/api/vi/payment", paymentRouter);
 app.get("/", (req, res) => {
   res.send("hello welcome to my personal api server");

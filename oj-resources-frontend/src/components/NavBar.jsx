@@ -1,13 +1,24 @@
 "use client";
-// components/NavBar.jsx
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { TiShoppingCart } from "react-icons/ti";
+import useCartStore from "../app/Store/cartStore.js";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const cart = useCartStore((state) => state.items);
+
+  // Handle hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
@@ -35,9 +46,14 @@ const NavBar = () => {
           <li>
             <Link
               href="/Cart"
-              className="mb-[0.9] px-3 py-1 flex justify-center items-center rounded-md"
+              className="mb-[0.9] px-3 py-1 flex justify-center items-center rounded-md relative hover:text-green-600"
             >
               <TiShoppingCart size={24} />
+              {cart?.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {cart.length}
+                </span>
+              )}
             </Link>
           </li>
           <li>
@@ -83,10 +99,15 @@ const NavBar = () => {
             <li>
               <Link
                 href="/Cart"
-                className="mb-[0.9] px-3 py-1 justify-center items-center block"
+                className="mb-[0.9] px-3 py-1 flex items-center relative"
                 onClick={() => setIsOpen(false)}
               >
                 <TiShoppingCart size={24} />
+                {cart?.length > 0 && (
+                  <span className="absolute -top-2 left-8 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {cart.length}
+                  </span>
+                )}
               </Link>
             </li>
             <li>

@@ -11,6 +11,7 @@
   "dependencies": {
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
+    "@paystack/inline-js": "^2.22.2",
     "@shadcn/ui": "^0.0.4",
     "@tanstack/react-query": "^5.67.1",
     "axios": "^1.8.1",
@@ -21,8 +22,11 @@
     "next": "^15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
+    "react-paystack": "^6.0.0",
     "react-query": "^3.39.3",
+    "recharts": "^2.15.1",
     "swr": "^2.3.2",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.3"

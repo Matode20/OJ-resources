@@ -1,143 +1,105 @@
 "use client";
-
 import { useState } from "react";
-import useCartStore from "@/store/cartStore";
 import { useRouter } from "next/navigation";
+import { usePaystackPayment } from "react-paystack";
+import useCartStore from "../Store/cartStore.js";
+import { toast } from "react-hot-toast";
 
 const CheckoutPage = () => {
-  const { cart, clearCart } = useCartStore();
   const router = useRouter();
+  const { items, clearCart } = useCartStore();
+  const [email, setEmail] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const calculateTotal = () => {
+    return items.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const config = {
+    reference: new Date().getTime().toString(),
+    email: email,
+    amount: calculateTotal() * 100, // Convert to kobo
+    publicKey: "your_paystack_public_key_here",
+    currency: "NGN",
+  };
 
-  const handleCheckout = async (e) => {
+  const initializePayment = usePaystackPayment(config);
+
+  const onSuccess = (reference) => {
+    setIsProcessing(false);
+    toast.success("Payment successful!");
+    clearCart();
+    router.push("/success");
+  };
+
+  const onClose = () => {
+    setIsProcessing(false);
+    toast.error("Payment cancelled");
+  };
+
+  const handlePayment = (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    const orderData = {
-      user: formData,
-      items: cart,
-      totalPrice,
-    };
-
-    try {
-      const res = await fetch("/api/paystack/initialize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        window.location.href = data.authorizationUrl; // Redirect to Paystack
-      } else {
-        alert(data.error || "Payment initialization failed.");
-      }
-    } catch (error) {
-      console.error("Checkout Error:", error);
-      alert("Something went wrong.");
-    } finally {
-      setLoading(false);
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
     }
+    setIsProcessing(true);
+    initializePayment(onSuccess, onClose);
   };
+
+  if (items.length === 0) {
+    router.push("/Shop");
+    return null;
+  }
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Checkout</h1>
+      <h1 className="text-2xl font-semibold mb-6">Checkout</h1>
 
-      {cart.length === 0 ? (
-        <div className="text-center">
-          <p className="text-lg">Your cart is empty.</p>
-          <button
-            onClick={() => router.push("/shop")}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-          >
-            Go to Shop
-          </button>
-        </div>
-      ) : (
-        <form
-          className="max-w-lg mx-auto bg-white p-6 shadow-lg rounded-lg"
-          onSubmit={handleCheckout}
-        >
-          <div className="mb-4">
-            <label className="block text-gray-700">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-md"
-              required
-            />
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+          {items.map((item) => (
+            <div key={item._id} className="flex justify-between mb-2">
+              <span>
+                {item.name} x {item.quantity}
+              </span>
+              <span>₦{(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          ))}
+          <div className="border-t mt-4 pt-4">
+            <div className="flex justify-between font-semibold">
+              <span>Total:</span>
+              <span>₦{calculateTotal().toFixed(2)}</span>
+            </div>
           </div>
+        </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+        <form onSubmit={handlePayment}>
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-2">
+              Email Address
+            </label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded-md"
               required
             />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700">Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-          </div>
-
-          <div className="text-lg font-bold text-right mb-4">
-            Total: ₦{totalPrice.toFixed(2)}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700"
-            disabled={loading}
+            disabled={isProcessing}
+            className={`w-full ${
+              isProcessing ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white px-6 py-3 rounded-lg`}
           >
-            {loading ? "Processing..." : "Proceed to Paystack"}
+            {isProcessing ? "Processing..." : "Pay Now"}
           </button>
         </form>
-      )}
+      </div>
     </div>
   );
 };

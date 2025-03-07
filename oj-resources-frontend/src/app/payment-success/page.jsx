@@ -1,28 +1,30 @@
 "use client";
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const PaymentSuccess = () => {
+const SuccessPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setTimeout(() => {
-      router.push("/shop");
+    const timeout = setTimeout(() => {
+      router.push("/");
     }, 5000);
-  }, []);
+
+    return () => clearTimeout(timeout);
+  }, [router]);
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-green-600">
-          Payment Successful!
-        </h1>
-        <p className="text-lg mt-2">Thank you for your purchase.</p>
-        <p className="text-sm">Redirecting to shop...</p>
-      </div>
+    <div className="container mx-auto p-6 text-center">
+      <h1 className="text-3xl font-bold text-green-600 mb-4">
+        Payment Successful!
+      </h1>
+      <p className="mb-4">Thank you for your purchase.</p>
+      <Link href="/" className="text-blue-500 hover:underline">
+        Return to Home
+      </Link>
     </div>
   );
 };
 
-export default PaymentSuccess;
+export default SuccessPage;
