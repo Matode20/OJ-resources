@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import AdminSidebar from "@/components/AdminSidebar";
-import AdminHeader from "@/components/AdminHeader";
-import DashboardCards from "@/components/DashboardCards";
+import AdminSidebar from "../../components/AdminSidebar";
+import AdminHeader from "../../components/AdminHeader";
+import DashboardCards from "../../components/AdminDashboardCards";
 import { toast } from "react-hot-toast";
 
 const AdminDashboard = () => {

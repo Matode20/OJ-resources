@@ -18,7 +18,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:720/api/v1/user/login",
+        "http://localhost:720/api/v1/user/Login",
         formData
       );
       localStorage.setItem("token", response.data.token);
@@ -32,7 +32,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex gap-5 items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -81,7 +81,7 @@ const LoginPage = () => {
         </form>
         <div className="text-center">
           <Link
-            href="/register"
+            href="/Register"
             className="font-medium text-green-600 hover:text-green-500"
           >
             Don't have an account? Register

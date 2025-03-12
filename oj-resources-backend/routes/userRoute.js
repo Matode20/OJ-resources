@@ -8,8 +8,8 @@ UserRouter.get("/", (req, res) => {
   res.json({ message: "User routes working" });
 });
 
-UserRouter.post("/register", authController.register);
-UserRouter.post("/login", authController.login);;
+UserRouter.post("/Register", authController.register);
+UserRouter.post("/Login", authController.login);;
 
 UserRouter.get("/profile/:id", (req, res) => {});
 

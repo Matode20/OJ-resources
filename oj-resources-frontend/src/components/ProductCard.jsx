@@ -1,23 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import useCartStore from "@/app/Store/cartStore.js";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import useCartStore from "@/app/Store/cartStore.js";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCartStore();
   const [hovered, setHovered] = useState(false);
-  console.log(product.images[0]);
+  const [imageError, setImageError] = useState(false);
 
-  // const transformImageUrl = (url) => {
-  //   // Check if it's an unsplash.com URL that needs transformation
-  //   if (url && url.includes("unsplash.com/photos/")) {
-  //     // Extract the ID from the URL
-  //     const id = url.split("/").pop();
-  //     return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop`;
-  //   }
-  //   return url;
-  // };
+  // Log the image URL for debugging
+  console.log("Product image URL:", product.image);
 
   return (
     <motion.div
@@ -25,26 +18,27 @@ const ProductCard = ({ product }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <Link href={`/shop/${product._id}`} className="block">
+      <Link href={`/product/${product._id}`} className="block">
         <div className="relative h-48 w-full mb-4">
-          <Image
-            // src={product.images[0]}
-            // src={transformImageUrl(product.images[0])}
-            src={""}
-            alt={product.name}
-            fill
-            className="object-cover rounded-md"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
-            // onError={(e) => {
-            //   console.error("Image loading error:", e);
-            //   e.target.src = "/placeholder.png"; // Fallback image
-            // }}
-          />
+          {imageError ? (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <span>Image not available</span>
+            </div>
+          ) : (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover rounded-md"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority
+              onError={() => setImageError(true)}
+            />
+          )}
         </div>
       </Link>
       <div className="mt-2">
-        <Link href={`/shop/${product._id}`}>
+        <Link href={`/products/${product._id}`}>
           <h3 className="text-lg font-semibold hover:text-green-600">
             {product.name}
           </h3>
@@ -60,7 +54,7 @@ const ProductCard = ({ product }) => {
           >
             Add to Cart
           </motion.button>
-          <Link href={`/shop/${product._id}`}>
+          <Link href={`/products/${product._id}`}>
             <motion.button
               className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
               whileHover={{ scale: 1.1 }}

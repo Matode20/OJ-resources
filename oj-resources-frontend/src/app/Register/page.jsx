@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -17,15 +17,28 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const response = await axios.post(
-        "http://localhost:720/api/v1/user/register",
-        formData
+        "http://localhost:720/api/v1/user/Register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      toast.success("Registration successful!");
-      router.push("/login");
+
+      if (response.data) {
+        toast.success("Registration successful!");
+        router.push("/Login");
+      }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      console.error("Registration error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -42,7 +55,12 @@ const RegisterPage = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
               <input
+                id="username"
+                name="username"
                 type="text"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
@@ -54,7 +72,12 @@ const RegisterPage = () => {
               />
             </div>
             <div>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
               <input
+                id="email"
+                name="email"
                 type="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
@@ -66,7 +89,12 @@ const RegisterPage = () => {
               />
             </div>
             <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
+                id="password"
+                name="password"
                 type="password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
@@ -91,6 +119,7 @@ const RegisterPage = () => {
             </button>
           </div>
         </form>
+
         <div className="text-center">
           <Link
             href="/login"

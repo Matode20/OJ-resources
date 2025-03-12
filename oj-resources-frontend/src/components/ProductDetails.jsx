@@ -6,6 +6,8 @@ import axios from "axios";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
+dotenv.config();
+
 const ProductDetails = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
@@ -16,7 +18,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`
+          `${process.env.API_BASE_URL}/products/${productId}`
         );
         setProduct(response.data);
       } catch (err) {

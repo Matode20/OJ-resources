@@ -14,15 +14,12 @@ const nextConfig = {
     ];
   },
   images: {
-    // domains: ["images.unsplash.com"],
-    domains: ["images.unsplash.com", "unsplash.com"],
-
+    domains: ["res.cloudinary.com"],
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "720",
-        pathname: "/uploads/**",
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/*/image/upload/**",
       },
     ],
     dangerouslyAllowSVG: true,

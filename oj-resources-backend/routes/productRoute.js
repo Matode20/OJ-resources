@@ -1,30 +1,27 @@
 import express from "express";
-import {
-  createProduct,
-  getProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/productController.js";
+import productController from "../controllers/productController.js";
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../utils/cloudinary.js";
 
-const productRouter = express.Router();
+const router = express.Router();
 
-productRouter.post("/create", createProduct);
-productRouter.get("/", getProducts);
-productRouter.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-    res.json(product);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching product", error: error.message });
-  }
-});;
-productRouter.put("/update/:id", updateProduct);
-productRouter.delete("/delete/:id", deleteProduct);
+// Cloudinary storage configuration
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "products",
+    allowed_formats: ["jpg", "png", "jpeg"],
+  },
+});
 
-export default productRouter;
+const upload = multer({ storage });
+
+// Product routes
+router.post("/create", upload.single("image"), productController.createProduct);
+router.get("/", productController.getProducts);
+router.get("/:id", productController.getProductById);
+router.put("/update/:id", productController.updateProduct);
+router.delete("/delete/:id", productController.deleteProduct);
+
+export default router;

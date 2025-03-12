@@ -25,24 +25,14 @@ const productSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    images: [
-      {
-        type: String, // URL of the image
-      },
-    ],
     image: {
       type: String,
-      required: true,
-      get: function (image) {
-        return `http://localhost:5000/${image}`;
-      },
+      required: true, // Cloudinary URL
     },
   },
   {
     timestamps: true,
-    toJSON: { getters: true },
   }
 );
 
-const Product = mongoose.model("Product", productSchema);
-export default Product;
+export default mongoose.model("Product", productSchema);
