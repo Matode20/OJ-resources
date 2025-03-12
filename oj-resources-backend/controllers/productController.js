@@ -6,23 +6,14 @@ import Product from "../models/product.js";
  */
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock, images } = req.body;
-
     const product = new Product({
-      name,
-      description,
-      price,
-      category,
-      stock,
-      images,
+      ...req.body,
+      image: `uploads/${req.file.filename}`, // Multer adds file info to req.file
     });
-
     await product.save();
     res.status(201).json(product);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating product", error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 

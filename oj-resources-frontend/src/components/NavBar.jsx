@@ -21,7 +21,7 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="bg-white shadow-md fixed w-full top-0 z-50">
+    <nav className="bg-gray-500 shadow-md fixed w-full top-0 z-50 right-6 items-center justify-center">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <Link
@@ -32,7 +32,7 @@ const NavBar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6">
+        <ul className="hidden md:flex bg-gray-500 space-x-6">
           <li>
             <Link href="/" className="hover:text-green-600">
               Home
@@ -64,6 +64,16 @@ const NavBar = () => {
           <li>
             <Link href="/Contact" className="hover:text-green-600">
               Contact
+            </Link>
+          </li>
+          <li>
+            <Link href="/login" className="hover:text-green-600">
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link href="/register" className="hover:text-green-600">
+              Register
             </Link>
           </li>
         </ul>
@@ -126,6 +136,24 @@ const NavBar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/login"
+                className="block"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/register"
+                className="block"
+                onClick={() => setIsOpen(false)}
+              >
+                Register
               </Link>
             </li>
           </ul>

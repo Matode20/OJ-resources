@@ -9,7 +9,6 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     price: {
       type: Number,
@@ -31,8 +30,18 @@ const productSchema = new mongoose.Schema(
         type: String, // URL of the image
       },
     ],
+    image: {
+      type: String,
+      required: true,
+      get: function (image) {
+        return `http://localhost:5000/${image}`;
+      },
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { getters: true },
+  }
 );
 
 const Product = mongoose.model("Product", productSchema);

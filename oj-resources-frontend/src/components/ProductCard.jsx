@@ -1,11 +1,23 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import  useCartStore  from "@/app/Store/cartStore.js";
+import useCartStore from "@/app/Store/cartStore.js";
 import Link from "next/link";
+import Image from "next/image";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCartStore();
   const [hovered, setHovered] = useState(false);
+  console.log(product.images[0]);
+
+  // const transformImageUrl = (url) => {
+  //   // Check if it's an unsplash.com URL that needs transformation
+  //   if (url && url.includes("unsplash.com/photos/")) {
+  //     // Extract the ID from the URL
+  //     const id = url.split("/").pop();
+  //     return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop`;
+  //   }
+  //   return url;
+  // };
 
   return (
     <motion.div
@@ -14,11 +26,22 @@ const ProductCard = ({ product }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <Link href={`/shop/${product._id}`} className="block">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded-md"
-        />
+        <div className="relative h-48 w-full mb-4">
+          <Image
+            // src={product.images[0]}
+            // src={transformImageUrl(product.images[0])}
+            src={""}
+            alt={product.name}
+            fill
+            className="object-cover rounded-md"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority
+            // onError={(e) => {
+            //   console.error("Image loading error:", e);
+            //   e.target.src = "/placeholder.png"; // Fallback image
+            // }}
+          />
+        </div>
       </Link>
       <div className="mt-2">
         <Link href={`/shop/${product._id}`}>
